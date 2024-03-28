@@ -1,0 +1,29 @@
+{
+  "name": "animal-care",
+  "version": "1.0.0",
+  "description": "This website for animal Healthcare",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VinodChoudhary12/AnimalCare.git"
+  },
+  "author": "InfoTech",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VinodChoudhary12/AnimalCare/issues"
+  },
+  "homepage": "https://github.com/VinodChoudhary12/AnimalCare#readme",
+  "devDependencies": {
+    "nodemon": "^3.1.0",
+    "prettier": "^3.2.5"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.2.3"
+  }
+}
