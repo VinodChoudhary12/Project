@@ -22,7 +22,7 @@ export const userRegistraion = asyncHandler(async (req, res) => {
         throw new ApiError(400, "All fields are required")
     }
     const existedUser = await User.findOne({
-        $or: [{ name }, { email }]
+        $or: [{ email }]
     })
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
@@ -32,4 +32,26 @@ export const userRegistraion = asyncHandler(async (req, res) => {
     return res.status(201).json(
         new ApiResponse(201, createdUser, "User registered Successfully")
     )
+})
+export const deleteUser = asyncHandler(async (req, res) => {
+
+    const id = req.params.id;
+    const existedUser = User.find({ _id: id })
+    if (!existedUser)
+        throw new ApiError(404, "User Not Found")
+    const user = await User.deleteOne({ _id: id })
+    console.log(user);
+    if (user.deletedCount) {
+        return res.status(200).json(
+            new ApiResponse(200, user, "User Has been Deleted Secessfully")
+        )
+    }
+
+
+
+
+})
+
+export const GetAnimalForAdoption= asyncHandler(async(req,res)=>{
+    
 })
