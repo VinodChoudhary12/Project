@@ -1,6 +1,6 @@
 
 import mongoose from "mongoose";
-const genderEnum = ['male', 'female', 'other'];
+
 const userSchema = new mongoose.Schema({
 
     name: {
@@ -27,7 +27,14 @@ const userSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: genderEnum
+
+    },
+    password: {
+        type: String
+    },
+    blockStatus: {
+        type: Boolean,
+        default: false
     }
 });
 
