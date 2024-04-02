@@ -6,6 +6,7 @@ import Animal from '../models/animal.model.js'
 import AnimalRescueRequest from '../models/AnimalRescueRequest.model.js'
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
 export const addUsers = async (req, res, next) => {
     try {
         await User.create({
@@ -21,17 +22,17 @@ export const userRegistraion = asyncHandler(async (req, res) => {
     // const { name, email, password, contact, age, gender, image } = req.body;
     console.log(req.body);
     if (
-        [name, email, password, contact, age, gender].some((field) => field?.trim() === "")
+        [req.body.name, req.body.email, req.body.password, req.body.contact, req.body.age, req.body.gender].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
-    const existedUser = await User.findOne({
-        $or: [{ email }]
-    })
-    if (existedUser) {
-        throw new ApiError(409, "User with email or username already exists")
-    }
-    let password = request.body.password;
+    // const existedUser = await User.findOne({
+    //     $or: [{ email }]
+    // })
+    // if (existedUser) {
+    //     throw new ApiError(409, "User with email or username already exists")
+    // }
+    let password = req.body.password;
     let saltKey = bcrypt.genSaltSync(10);
     password = bcrypt.hashSync(password, saltKey);
     req.body.password = password;
