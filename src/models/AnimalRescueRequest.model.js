@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const animalRescueRequestSchema = new Schema({
-    requestId: {
-        type: Number,
-        autoIncreament: true,
-        unique: true
-    },
+    // requestId: {
+    //     type: Number,
+    //     autoIncreament: true,
+    //     unique: true
+    // },
     description: { // Description of the animal (optional)
         type: String
     },
@@ -26,15 +26,21 @@ const animalRescueRequestSchema = new Schema({
         type: String,
 
     },
-    status: { // Status of the request (optional)
+    // status: { // Status of the request (optional)
+    //     type: String,
+    //     default: "pending",
+    //     enum: ['Pending', 'Assigned', 'Resolved']
+
+    // }, 
+    status: {
         type: String,
-        enum: ['Pending', 'Assigned', 'Resolved']
+        default: "pending",
+        enum: ['pending', 'assigned', 'resolved'] // Lowercase values without spaces
     },
-    description: { // Optional field for capturing any additional details 
-        type: String
-    },
+
     date: {
-        type: Date
+        type: Date,
+        default: Date.now
     },
     rescuedBy: {
         type: Schema.Types.ObjectId,
@@ -46,4 +52,5 @@ const animalRescueRequestSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('AnimalRescueRequest', animalRescueRequestSchema);
+const AnimalRescueRequest = mongoose.model('AnimalRescueRequest', animalRescueRequestSchema);
+export default AnimalRescueRequest;
