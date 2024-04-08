@@ -1,4 +1,5 @@
 
+
 import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
@@ -35,7 +36,7 @@ const animalSchema = new Schema({
     After_Treatment_image: {
         type: String
     },
-    State: {
+    state: {
         type: String,
         enum: ["Patient", "Ready for Adoption", "Released, Stay In Shelter"]
     },
@@ -47,4 +48,3 @@ const animalSchema = new Schema({
 
 const Animal = mongoose.model('Animal', animalSchema);
 export default Animal;
-

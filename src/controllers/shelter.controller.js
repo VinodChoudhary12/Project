@@ -31,3 +31,29 @@ export const getRescuedAnimal = asyncHandler(async (req, res) => {
     )
 
 })
+
+
+export const InsertAminal = asyncHandler(async (req, res, next) => {
+    try {
+        const { name, species, age, description, state } = req.body;
+
+        if (![name, species, age, description].every(field => field && field.trim() !== "")) {
+            throw new ApiError(400, "Required fields are missing.");
+        }
+
+        const newAnimal = new Animal({
+            name,
+            species,
+            age,
+            description,
+            state
+        });
+
+        await newAnimal.save();
+
+        return res.status(201).json(new ApiResponse(200, "Animal Inserted Successfully"));
+    } catch (error) {
+        next(error);
+    }
+})
+    ;
