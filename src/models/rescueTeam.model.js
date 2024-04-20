@@ -8,7 +8,7 @@ const teamSchema = new Schema({
         required: true,
         unique: true
     },
-    teanUserName:{
+    teamUserName:{
         type:String,
         required: true,
         unique: true
