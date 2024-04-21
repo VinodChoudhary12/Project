@@ -4,10 +4,15 @@ import userrouter from "./routes/user.routes.js";
 import shelterRouter from "./routes/shelter.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import resrouter from "./routes/rescue.routes.js";
-import { cors } from "cors";
+import cors from "cors";
 
+
+app.use(cors({
+    origin: process.env.CORS_ORIGIN,
+    credentials: true
+}))
 app.use(express.json());
-app.use(cors());
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("/public"));
 app.use("/", userrouter);
