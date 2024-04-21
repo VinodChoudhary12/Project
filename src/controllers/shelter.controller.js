@@ -4,7 +4,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 
-//Add Animal for Adoption
+
 export const addAnimal = asyncHandler(async (req, res) => {
     console.log(req.body);
     const animal = await animalModel.create(req.body)

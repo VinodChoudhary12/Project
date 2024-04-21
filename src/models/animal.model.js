@@ -24,10 +24,6 @@ const animalSchema = new Schema({
     image: {
         type: String
     },
-    isAvailable: {
-        type: Boolean,
-        default: true
-    },
     Before_Treatment_image: {
         type: String
     },

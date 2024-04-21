@@ -26,12 +26,7 @@ export const userRegistraion = asyncHandler(async (req, res) => {
     ) {
         throw new ApiError(400, "All fields are required")
     }
-    // const existedUser = await User.findOne({
-    //     $or: [{ email }]
-    // })
-    // if (existedUser) {
-    //     throw new ApiError(409, "User with email or username already exists")
-    // }
+
     let password = req.body.password;
     let saltKey = bcrypt.genSaltSync(10);
     password = bcrypt.hashSync(password, saltKey);
