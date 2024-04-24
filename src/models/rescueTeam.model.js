@@ -8,6 +8,11 @@ const teamSchema = new Schema({
         required: true,
         unique: true
     },
+    teamUserName:{
+        type:String,
+        required: true,
+        unique: true
+    },
     teamName: {
         type: String,
         required: true
