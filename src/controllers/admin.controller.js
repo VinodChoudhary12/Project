@@ -1,5 +1,5 @@
-import { RescueTeam } from "../models/rescueTeam.model.js";
-import { Employee } from "../models/employee.model.js";
+import RescueTeam from "../models/rescueTeam.model.js";
+import Employee from "../models/employee.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";

@@ -10,8 +10,9 @@ const animalRescueRequestSchema = new Schema({
     descriptionByRescueTeam: {
         type: String
     },
-    image: {
-        type: String
+    avtar: {
+        type: String,
+        require: true
     },
     location: {
         type: String,

@@ -8,8 +8,8 @@ const teamSchema = new Schema({
         required: true,
         unique: true
     },
-    teamUserName:{
-        type:String,
+    teamUserName: {
+        type: String,
         required: true,
         unique: true
     },
@@ -27,4 +27,5 @@ const teamSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('RescueTeam', teamSchema);
+const RescueTeam = mongoose.model('RescueTeam', teamSchema);
+export default RescueTeam
