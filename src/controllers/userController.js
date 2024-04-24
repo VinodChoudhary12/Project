@@ -67,8 +67,15 @@ export const GetAnimalForAdoption = asyncHandler(async (req, res) => {
 export const requestForrescue = asyncHandler(async (req, res) => {
 
     const request = await AnimalRescueRequest.create(req.body)
+
+    const avatar = req.file.filename;
     if (!request)
         throw new ApiError(500, "Internal Server Error")
+    const cloudinaryResponse = await uploadOnCloudinary(`./public/${avatar}`);
+    console.log(cloudinaryResponse);
+    if (!cloudinaryResponse) {
+        return res.status(500).json({ error: "Failed to upload file to Cloudinary", });
+    }
 
     return res.status(201).json(
         new ApiResponse(201, request, 'Request Has Been Submited Successfully')
