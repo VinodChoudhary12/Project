@@ -5,6 +5,7 @@ import shelterRouter from "./routes/shelter.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import resrouter from "./routes/rescue.routes.js";
 import cors from "cors";
+import Dashrouter from "./routes/dashboard.routes.js";
 
 
 app.use(cors({
@@ -19,4 +20,5 @@ app.use("/", userrouter);
 app.use("/shelter", shelterRouter);
 app.use("/rescue", resrouter);
 app.use("/admin", adminRouter);
+app.use('/dashboard', Dashrouter)
 export { app };

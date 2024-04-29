@@ -10,36 +10,70 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
 
-export const addUsers = async (req, res, next) => {
-    try {
-        await User.create({
-            name: 'Nihar'
-        }).then(res => { "then chali" }).catch(err => { "Err" })
-        res.status(201).json({ msg: "User is Created by vinod" })
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ msg: "Error" })
-    }
-}
+
+// export const userRegistraion = asyncHandler(async (req, res) => {
+//     // const { name, email, password, contact, age, gender, avtar } = req.body;
+//     console.log(req.body);
+//     if (
+//         [req.body.name, req.body.email, req.body.password, req.body.contact, req.body.age, req.body.gender].some((field) => field?.trim() === "")
+//     ) {
+//         throw new ApiError(400, "All fields are required")
+//     }
+
+//     let password = req.body.password;
+//     let saltKey = bcrypt.genSaltSync(10);
+//     password = bcrypt.hashSync(password, saltKey);
+//     req.body.password = password;
+//     const createdUser = await User.create(req.body)
+
+//     return res.status(201).json(
+//         new ApiResponse(201, createdUser, "User registered Successfully")
+//     )
+// })
 export const userRegistraion = asyncHandler(async (req, res) => {
-    // const { name, email, password, contact, age, gender, avtar } = req.body;
-    console.log(req.body);
-    if (
-        [req.body.name, req.body.email, req.body.password, req.body.contact, req.body.age, req.body.gender].some((field) => field?.trim() === "")
-    ) {
-        throw new ApiError(400, "All fields are required")
+    if (![req.body.name, req.body.email, req.body.password, req.body.contact, req.body.age, req.body.gender].every(field => field && field.trim() !== "")) {
+        throw new ApiError(400, "All fields are required");
     }
 
-    let password = req.body.password;
-    let saltKey = bcrypt.genSaltSync(10);
-    password = bcrypt.hashSync(password, saltKey);
-    req.body.password = password;
-    const createdUser = await User.create(req.body)
+    const salt = bcrypt.genSaltSync(10);
+    const hashedPassword = bcrypt.hashSync(req.body.password, salt);
+    req.body.password = hashedPassword;
 
-    return res.status(201).json(
-        new ApiResponse(201, createdUser, "User registered Successfully")
-    )
-})
+    const newUser = await User.create(req.body);
+    return res.status(201).json(new ApiResponse(201, newUser, "User registered successfully"));
+});
+export const userLogin = asyncHandler(async (req, res) => {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new ApiError(404, "User not found");
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        throw new ApiError(401, "Invalid credentials");
+    }
+
+    const token = jwt.sign({ id: user._id }, 'This is my Secret Key', { expiresIn: '1h' });
+
+    // Set user token in local storage
+    localStorage.setItem('userToken', token);
+
+    return res.status(200).json({ token });
+});
+export const updateProfile = asyncHandler(async (req, res) => {
+    const { userId } = req.params;
+    const updatedData = req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedData, { new: true });
+    if (!updatedUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    return res.status(200).json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
+});
+
 export const deleteUser = asyncHandler(async (req, res) => {
 
     const id = req.params.id;
@@ -57,8 +91,7 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
 
 
-})
-
+});
 export const GetAnimalForAdoption = asyncHandler(async (req, res) => {
     const animals = await Animal.find({ State: "Ready for Adoption" })
     if (!animals)
@@ -66,7 +99,7 @@ export const GetAnimalForAdoption = asyncHandler(async (req, res) => {
     return res.status(200).json(
         new ApiResponse(200, animals)
     )
-})
+});
 
 export const requestForrescue = asyncHandler(async (req, res) => {
     const { descriptionByUser, location, coplainerName, contact, animalType } = req.body;
@@ -92,13 +125,9 @@ export const requestForrescue = asyncHandler(async (req, res) => {
         animalType,
         avtar: cloudinaryResponse.url
     });
-
-
-    if (!request) 
-    {
+    if (!request) {
         throw new ApiError(500, "Internal Server Error");
     }
-
     return res.status(201).json(
         new ApiResponse(201, request, 'Request Has Been Submitted Successfully')
     );

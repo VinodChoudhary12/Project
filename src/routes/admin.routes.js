@@ -20,7 +20,6 @@ http://localhost:8000/admin/AdminSignUp
 router.post('/AdminSignUp', signupController)
 http://localhost:8000/admin/AdminLogin
 router.post('/AdminLogin', loginController)
-
 router.post('/ForgotPassword', forgetPasswordController)
 router.post('/ResetPasssword', changePassword)
 router.post('/GetEmployeeById', getEmployeeById)
