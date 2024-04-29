@@ -3,6 +3,167 @@ import Employee from "../models/employee.model.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import bcrypt from "bcrypt";
+import Admin from "../models/admin.model.js";
+import jwt from "jsonwebtoken";
+
+
+export const deleteEmployeeById = async (req, res) => {
+    const id = req.body;
+
+    try {
+
+        await Employee.findByIdAndDelete(id);
+
+        return res.status(200).json({ message: "Employee deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error" });
+    }
+};
+export const getEmployeeById = async (req, res) => {
+    const id = req.body;
+
+    try {
+        // Find the employee by id
+        const employee = await Employee.findById(id);
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        return res.status(200).json({ employee });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error" });
+    }
+};
+export const editEmployeeDetails = async (req, res) => {
+    const { id, updates } = req.body;
+
+    try {
+        // Find the employee by id and update
+        const employee = await Employee.findByIdAndUpdate(id, updates, { new: true });
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        return res.status(200).json({ message: "Employee details updated successfully", employee });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error" });
+    }
+};
+export const changePassword = async (req, res) => {
+    const { id, currentPassword, newPassword } = req.body;
+
+    try {
+        // Find the employee by id
+        const employee = await Employee.findById(id);
+
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found" });
+        }
+
+        // Check if the current password matches
+        const isPasswordValid = await bcrypt.compare(currentPassword, employee.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Incorrect current password" });
+        }
+
+        // Hash the new password
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+        // Update the employee's password
+        await Employee.findByIdAndUpdate(id, { password: hashedNewPassword });
+
+        return res.status(200).json({ message: "Password changed successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Server Error" });
+    }
+};
+export const signupController = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+
+        const existingAdmin = await Admin.findOne({ email });
+
+        if (existingAdmin) {
+            return res.status(400).json({ message: "Admin already exists" });
+        }
+
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+
+        const newAdmin = new Admin({
+            email,
+            password: hashedPassword
+        });
+
+
+        await newAdmin.save();
+
+
+        const token = jwt.sign({ id: newAdmin._id }, "Here is my Secret Key", { expiresIn: "1h" });
+        res.status(201).json({ token, newAdmin });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+export const forgetPasswordController = async (req, res) => {
+    const email  = req.body;
+
+    try {
+        // Check if the admin exists
+        const admin = await Admin.findOne({ email });
+
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        // Generate a password reset token
+        const token = jwt.sign({ id: admin._id }, "your_secret_key_here", { expiresIn: "1h" });
+
+        res.status(200).json({ resetToken: token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+export const loginController = async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        // Check if the admin exists
+        const admin = await Admin.findOne({ email });
+
+        if (!admin) {
+            return res.status(404).json({ message: "Admin not found" });
+        }
+
+        // Check if the password is correct
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: "Invalid credentials" });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign({ id: admin._id }, "your_secret_key_here", { expiresIn: "1h" });
+
+        // Send the token in the response
+        res.status(200).json({ token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
 
 
 export const addTeam = asyncHandler(async (req, res) => {
@@ -25,6 +186,7 @@ export const addTeam = asyncHandler(async (req, res) => {
         return res.status(201).json(new ApiResponse(200, "RescueTeam Added Successfully"));
     }
 });
+
 export const updateById = async (req, res, next) => {
     let { teamId, teamName, teamMemberId, teamLeadId } = req.body;
     const existedEmp = await RescueTeam.findOne({ teamId });

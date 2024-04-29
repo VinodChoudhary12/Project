@@ -24,4 +24,6 @@ const adoptionSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('Adoption', adoptionSchema);
+const Adoption = mongoose.model('Adoption', adoptionSchema);
+export default Adoption;
+

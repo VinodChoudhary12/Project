@@ -55,5 +55,4 @@ export const InsertAminal = asyncHandler(async (req, res, next) => {
     } catch (error) {
         next(error);
     }
-})
-    ;
+}); 

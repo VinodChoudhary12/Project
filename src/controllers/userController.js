@@ -9,6 +9,7 @@ import jwt from "jsonwebtoken";
 import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { upload } from "../middlewares/multer.middleware.js"
 
+
 export const addUsers = async (req, res, next) => {
     try {
         await User.create({
@@ -66,85 +67,10 @@ export const GetAnimalForAdoption = asyncHandler(async (req, res) => {
         new ApiResponse(200, animals)
     )
 })
-// export const requestForrescue = asyncHandler(async (req, res) => {
 
-
-
-//     const avtar = req.file.filename;
-//     console.log(req.body);
-//     console.log(avtar);
-//     if (!request)
-//         throw new ApiError(500, "Internal Server Error")
-
-//     console.log("76Line");
-//     const cloudinaryResponse = await uploadOnCloudinary(`./public/${avtar}`);
-//     console.log("78Line");
-//     console.log(cloudinaryResponse);
-//     if (!cloudinaryResponse) {
-//         return res.status(500).json({ error: "Failed to upload file to Cloudinary", });
-//     }
-//     const request = await AnimalRescueRequest.create(req.body)
-//     return res.status(201).json(
-//         new ApiResponse(201, request, 'Request Has Been Submited Successfully')
-//     )
-
-// })
-// export const requestForrescue = asyncHandler(async (req, res) => {
-//     // Destructure the properties from req.body
-//     const { descriptionByUser, location, coplainerName, contact, animalType } = req.body;
-//     // Extract the filename from req.file
-//     //const avtar = req.file.path;
-//     const avtarPath = req.files.avtar.path;
-//     console.log(req.files);
-//     console.log(req.file);
-//     // const avtarPath = req.file?.avtar[0]?.path;
-//     console.log(avtarPath);
-//     // console.log(avtarPath);
-//     if (!avtarPath) {
-//         throw new ApiError(400, "File is Reqired");
-//     }
-
-//     const cloudinaryResponse = await uploadOnCloudinary(avtarPath);
-//     console.log(cloudinaryResponse);
-//     if (!cloudinaryResponse) {
-//         throw new ApiError(400, "File is Reqired");
-//     }
-
-
-//     // Create the AnimalRescueRequest object with destructured properties
-//     const request = await AnimalRescueRequest.create({
-//         descriptionByUser,
-//         location,
-//         coplainerName,
-//         contact,
-//         animalType,
-//         avtar: cloudinaryResponse.url  // Add the avtar filename to the object
-//     });
-
-//     // Check if the request creation failed
-//     if (!request)
-//         throw new ApiError(500, "Internal Server Error");
-
-//     console.log("76Line");
-
-//     console.log("78Line");
-//     console.log(cloudinaryResponse);
-
-//     // Check if uploading to Cloudinary failed
-//     if (!cloudinaryResponse) {
-//         console.log(cloudinaryResponse);
-//         return res.status(500).json({ error: "Failed to upload file to Cloudinary", cloudinaryResponse: cloudinaryResponse });
-//     }
-
-//     return res.status(201).json(
-//         new ApiResponse(201, request, 'Request Has Been Submited Successfully')
-//     );
-// });
 export const requestForrescue = asyncHandler(async (req, res) => {
-    // Destructure the properties from req.body
     const { descriptionByUser, location, coplainerName, contact, animalType } = req.body;
 
-    // Extract the filename from req.file
     const avtarPath = req.file.path;
 
     if (!avtarPath) {
@@ -164,11 +90,12 @@ export const requestForrescue = asyncHandler(async (req, res) => {
         coplainerName,
         contact,
         animalType,
-        avtar: cloudinaryResponse.url  // Add the avtar filename to the object
+        avtar: cloudinaryResponse.url
     });
 
-    // Check if the request creation failed 
-    if (!request) {
+
+    if (!request) 
+    {
         throw new ApiError(500, "Internal Server Error");
     }
 
